@@ -218,51 +218,7 @@ function regUser() {
 }
 /*--------------------------------------------------------------------*/
 
-/*---------------------------------VISAR UPP PRODUKTEN PÅ BOKA SIDAN-----------------------------------*/
-/* function ShowResource(produktNamn) {
-    var typedb = "c20adael";
-    var namedb = produktNamn;
-    
-    
 
-    $.ajax({
-
-        type: 'POST',
-        url: 'Webbprogrammering-API-2014-/booking/getresources_XML.php',
-        data: {
-            type: encodeURIComponent(typedb),
-            name: encodeURIComponent(namedb)
-            
-        },
-        success: (printProd),
-
-        error: "errormsg"
-    });
-}
-
-function printProd(returnedData)
-		{
-            console.log(returnedData);
-			var resultset=returnedData.childNodes[0];
-			var output="<table>";
-			// Iterate over all nodes in root node (i.e. bookings)
-			for (i = 0; i < resultset.childNodes.length; i++) {
-				// Iterate over all child nodes of that node that are booking nodes
-				if(resultset.childNodes.item(i).nodeName=="resource"){
-					// Retrieve first name and last name for node
-					var resource=resultset.childNodes.item(i);
-                    output+="<tr class='actiontablerow'>";
-                    output+="<td id='testid'>"+resource.attributes['id'].nodeValue+"</td>";
-					output+="<td id='prodvalue' value="+resource.attributes['id'].nodeValue+">"+resource.attributes['name'].nodeValue+"</td>";
-					output+="<td>"+resource.attributes['auxdata'].nodeValue+"</td>";
-					output+="</tr>";
-				}
-            }
-			output+="</table>"
-			var div=document.getElementById('OutputDiv');
-			div.innerHTML=output;
-		}	 */
-/*-----------------------------------------------------------------------------*/
 
 /*--------------------------Datepicker---------------------------- */
 function loaded() {
