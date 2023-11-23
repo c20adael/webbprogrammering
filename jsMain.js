@@ -146,7 +146,6 @@ function chooseProd(x) {
         console.log(document.getElementById(x).checked);
         var y = 1;
         getVarukorg(x, y);
-        //ShowResource(x);
         alertProdChoice(x);
     }
     else if (document.getElementById(x).checked == true) {
