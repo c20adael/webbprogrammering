@@ -1,0 +1,173 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>webbaffär</title>
+    <link rel="stylesheet" href="indexcss.css">
+    <script src="jsMain.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    </style>
+
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js" integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script
+        src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+        integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+        crossorigin="anonymous">
+    </script>
+
+</head>
+
+<body onload="setupHistory(); loaded(); checkLocalStorage(); startupCanvas();">
+    <div id="menu">
+        <span id="menuleft">
+            <a href="#" class="navbarKnappar" onclick="showpagehistory('page1');">välkommen</a>
+            <a href="#" class="navbarKnappar" onclick="showpagehistory('page2'); getResourcesForProdPage();">Produkter</a>
+            <a href="#" class="navbarKnappar" onclick="showpagehistory('page3');">Om</a>
+            <a href="#" class="navbarKnappar" onclick="showpagehistory('page8');">Söksida</a>
+        </span>
+        <span id="menuright">
+            <a href="#" class="navbarKnappar" onclick="showpagehistory('page6');">Varukorg</a>
+            <img src="finbild.png" alt="" id="imgprofile">
+            <a href="#" id="nlogin" class="navbarKnappar" onclick="showpagehistory('page7');GetUserOnClickMinSida();">Min sida</a>
+            <a href="#" id="login" class="navbarKnappar" onclick="showpagehistory('page5');">Logga in</a>
+            
+        </span>
+    </div>
+
+
+    <div id="page1" class="page">
+        <h1>Välkommen!</h1>
+        <div>På denna sidan kan man boka en dator ifall att man skulle behöva en kraftigare <br> 
+            dator eller om man skulle behöva göra en specifik sak som kräver en bättre dator.</div>
+        <div></div>
+
+
+
+    </div>
+
+    <div id="page2" class="page">
+        <h1>PRODUKTER</h1>
+        <div id="resources">  
+        </div>
+    </div>
+
+    <div id="page3" class="page">
+        <h1>Om</h1>
+        <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, atque soluta deleniti voluptate temporibus quasi, ipsum nemo rem provident eos cum, quibusdam voluptatum veritatis consequatur minus impedit nesciunt at quae. Maxime tenetur consectetur perspiciatis, dolore ipsam quaerat. Blanditiis voluptatibus voluptate quo recusandae ducimus tempora dolor molestias voluptatem nesciunt nihil, ipsam ea sunt molestiae autem consequatur reprehenderit expedita repudiandae in quia! Debitis optio quidem corporis voluptate. Ex magni esse dolore quae saepe ducimus similique velit, consequatur nulla? Error ab minus eos maiores, eligendi nobis, facere quibusdam labore provident mollitia dolor accusantium quas deserunt ex atque ipsum, rerum veritatis beatae tempora nihil incidunt nostrum excepturi suscipit temporibus! Tenetur vitae quo doloremque, odit facilis harum fugit accusamus quidem eius hic inventore temporibus deserunt laboriosam alias distinctio, ad rerum quaerat nemo, officiis vel ratione iste. Sapiente aliquid, fugiat nostrum, aliquam modi hic praesentium dicta eaque, excepturi incidunt enim. Quaerat excepturi quasi voluptate, recusandae fugit accusamus placeat molestias aliquam deserunt neque mollitia harum velit laudantium reiciendis necessitatibus, sit illum. Fugit dicta optio, maxime voluptatem nisi enim ipsum cumque reprehenderit quisquam doloremque sapiente ipsa est consequuntur ea rem minima nulla a laborum! Nam ullam harum laudantium, quas quasi consequatur veniam corporis repellat quisquam! Dolores nulla recusandae alias repellendus repudiandae sint molestiae inventore cupiditate nemo laborum explicabo totam id accusantium, ab excepturi soluta harum eveniet numquam perspiciatis. Cumque a consectetur officiis voluptates ipsa officia necessitatibus ipsam dicta dignissimos ex dolore, optio qui eius sunt dolorum modi iste excepturi? Voluptates fugit ipsa nemo? Assumenda earum aspernatur voluptatum? Accusantium laudantium beatae debitis distinctio esse itaque temporibus. Voluptatem repellat quos tempora, esse odit enim officiis doloribus praesentium eligendi! Similique provident nihil excepturi in reprehenderit nulla! Quod consequatur doloribus aspernatur quia minus error quos minima soluta delectus reiciendis laborum fugit suscipit facere voluptate magni, non tenetur asperiores incidunt similique iure totam impedit officia ea nisi. Consectetur expedita reprehenderit minima nihil debitis non nisi doloribus culpa adipisci quas soluta eligendi dolor similique iste totam et unde autem quisquam, nostrum error nemo corrupti quibusdam quo molestiae. Repellendus perspiciatis deleniti porro odio illum minus rem numquam eveniet pariatur, libero autem at aliquam vel cum! Sit asperiores pariatur fugiat eum qui quas architecto sed fuga rem optio aut tempore amet, veritatis suscipit sapiente laudantium, consequuntur id animi voluptas? Repellendus earum exercitationem ipsam officiis, illo obcaecati atque aperiam. Facere assumenda qui atque molestiae aperiam temporibus, animi illo saepe omnis ipsam culpa, ipsum suscipit ullam nostrum explicabo laboriosam quidem vel commodi nisi. Ipsa sequi soluta neque suscipit voluptate eligendi nemo aspernatur fugit eveniet fugiat temporibus quo error sunt, reiciendis perspiciatis in excepturi numquam? Ratione consequuntur, tempora porro voluptatibus esse corporis nihil perspiciatis suscipit officia odit, voluptatum quia magnam cupiditate deserunt vero repudiandae, at in! Aspernatur, voluptas sunt! Modi repudiandae veritatis, error, aliquam iure quia ea eveniet facere exercitationem saepe quos ab in minus magnam asperiores hic voluptas tenetur sit vitae, sed possimus. Magnam, aperiam, totam accusamus vel molestiae amet neque nostrum sit dolores magni necessitatibus modi provident quasi ullam. Facilis, illo recusandae architecto corporis nam mollitia corrupti!</div>
+
+    </div>
+
+    <div id="page4" class="page">
+
+        <h1>Bokningssida</h1>
+        <div>
+            
+            <div id="testcont"></div>
+
+            <div>Från:<input type="text" id="from" name="from" onchange="datepickerhistory();"></div>
+            <div>Till:<input type="text" id="to" name="to"></div>
+            <div>Kund:<input type="text" id="bookingName"></div>
+            <button onclick="makebooking();">Genomför bokning!</button>
+            
+            <div id="OutputDiv"></div>
+        </div>
+        
+        
+    </div>
+
+
+    <div id="page6" class="page">
+
+        <h1>Varukorg</h1>
+        <ul id="ulCart">
+        </ul>
+        <button id="closekundvagn" onclick="goHide('page6')">stäng</button>
+        <button id="bokaKnapp" onclick="showpage('page4');getCostId()">Boka!</button>
+
+    </div>
+
+    <div id="page7" class="page">
+
+        <h1>Profil</h1>
+        <div>
+            <div id="MinSidaDiv"></div>
+            <div><button id="logout" onclick="clearLocalStorage(); showpage('page1');">Logga ut!</button></div>
+
+        </div>
+        
+        
+    </div>
+    <div id="page5" class="page">
+
+        <h1>Här kan du logga in Eller registrera Dig!</h1>
+        <div class="loggaindiv">
+            
+            <canvas id="logincanvas" width="400" height="400" ></canvas>
+            <form class="loggainform" action="">
+                    <div class="taggbredd">Användarnamn:
+                        <input id ="loginName" type="text" name="username">
+                    </div>
+                    <div class="taggbredd">
+                        <button onclick="GetCusomerFunctionCaller();">Logga in</button>
+                    </div>
+                
+            </form>
+        
+        </div>
+        
+        <div class="loggaindiv">
+            <form class="loggainform" action="">
+                <div>Registrera Dig!</div>
+                <div class="taggbredd">Användarnamn:
+                    <input id="username" type="text" name="username" value="" onchange="validate('username')" onkeyup="validate('username')" onkeydown="validate('username')">
+                </div>
+                <div class="taggbredd">Förnamn:
+                    <input id="fnamn" type="text" name="fnamn" value=""onchange="validate('fnamn')" onkeyup="validate('fnamn')">
+                </div>
+                <div class="taggbredd">Efternamn:
+                    <input id="enamn" type="text" name="enamn" value="" onchange="validate('enamn')" onkeyup="validate('enamn')">
+                </div>
+                <div class="taggbredd">Email:
+                    <input id="email" type="text" name="email" value="" onchange="validateEmail('email')" onkeyup="validateEmail('email')">
+                </div>
+                <div class="taggbredd">Adress:
+                    <input id="adress" type="text" name="adress" value="" onchange="validateAdress('adress')" onkeyup="validateAdress('adress')">
+                </div>
+                <div class="taggbredd">Auxdata:
+                    <input id="auxdata" type="text" name="auxdata" value="">
+                </div>
+                <div class="taggbredd">
+                    <input id="regKnapp" type="button" onclick="regUser()" value="Registrera" disabled>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    <div id="page8" class="page">
+
+        <h1>Sök på produkt</h1>
+        <div>
+            <div id="searchdiv">
+                <div>Sök på produkt.</div>
+                <input type="text" id="searchValue">
+                <button onclick="searchProd();">SÖK</button>
+                <div id="placeProdHere"></div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+</body>
+
+</html>

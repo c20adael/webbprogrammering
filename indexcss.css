@@ -1,0 +1,365 @@
+:root{
+    --clr-neon-g: hsl(102, 62%, 52%);
+    --clr-dark: hsl(100, 6%, 10%);
+
+    --clr-neon-p:hsl(317, 100%, 54%);
+    --clr-bg: hsl(323, 21%, 16%);
+}
+body{
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    margin: 0 0 0 0;
+    background:rgb(26, 24, 23);
+}
+
+::before, ::after{
+    box-sizing: border-box;
+}
+
+.navbarKnappar{
+    font-family: 'Roboto', sans-serif;
+    display: inline-block;
+    top: -10px;
+    white-space: nowrap;
+    font-size: 1rem;
+    margin-left: 15px;
+    margin-right: 15px;
+    color: var(--clr-neon-g);
+    cursor: pointer;
+    text-decoration: none;
+    border: 0.125em solid var(--clr-neon-g);
+    padding: 0.25em 1em;
+    border-radius: 0.25em;
+
+    text-shadow: 
+    0 0 0.125em 
+    hsl(0 0% 100% / 0.3),
+    0 0 0.5em currentColor;
+
+    box-shadow: 
+    inset 0 0 0.3em 0 var(--clr-neon-g),
+    0 0 0.5em 0 var(--clr-neon-g);
+
+    position: relative;
+}
+.navbarKnappar::before{
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    background:var(--clr-neon-g);
+    top: 120%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    transform: perspective(1.3em) rotateX(40deg) scale(1, 0.35);
+    filter: blur(1em);
+    opacity: 0.5;
+
+
+}
+.navbarKnappar::after{
+    content: "";
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    box-shadow: 0 0 4em 0 var(--clr-neon-g);
+    transition: opacity 100ms linear;
+    
+    
+}
+
+
+.navbarKnappar:hover,
+.navbarKnappar:focus{
+    background: var(--clr-neon-g);
+    color: var(--clr-dark);
+    opacity: 1;
+    
+}
+
+
+
+.navbarKnappar:hover:before,
+.navbarKnappar:focus:before{
+    opacity: 1;
+    
+}
+
+.navbarKnappar:hover:after{
+    opacity: 1;
+    
+}
+
+
+
+
+#page1{
+    display:block;
+    background:rgb(26, 24, 23);
+}
+#page2{
+    display:none;
+    background:rgb(26, 24, 23);
+}
+#page3{
+    display:none;
+    background:rgb(26, 24, 23);
+}
+#page4{
+    display:none;
+    background:rgb(26, 24, 23);
+}
+#page6{
+    z-index: 600;
+    display:none;
+    
+    position: absolute;
+    
+    width: 200px;
+    top: 200px;
+    left: 0; 
+    right: 0;
+    bottom:auto !important;
+    margin-left: auto; 
+    margin-right: 75px;
+    
+    background: red;
+
+    border: 0.125em solid var(--clr-neon-g);
+    padding: 0.25em 1em;
+    border-radius: 0.25em;
+
+    text-shadow: 
+    0 0 0.125em 
+    hsl(0 0% 100% / 0.3),
+    0 0 0.5em currentColor;
+
+    box-shadow: 
+    inset 0 0 0.3em 0 var(--clr-neon-g),
+    0 0 0.5em 0 var(--clr-neon-g);
+}
+
+.jsAnimation{
+    -webkit-animation: slideIn 1s forwards;
+    -moz-animation: slideIn 1s forwards;
+    animation: slideIn 1s forwards;
+}
+
+#page5{
+    display:none;
+    background:rgb(26, 24, 23);
+}
+#page7{
+    display:none;
+    background:rgb(26, 24, 23);
+}
+#page8{
+    display:none;
+    background:rgb(26, 24, 23);
+}
+
+#nlogin{
+    display: none ;
+}
+#login{
+    display: block ;
+}
+
+
+		
+.page{
+    position:relative;
+    z-index:501;
+    margin-top: 60px;
+}
+
+#menu {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    left:0px;
+    top:0px;
+    z-index:500;
+    position:absolute;
+    height:64px;
+   background:rgb(37, 36, 35);
+    right:0%;
+}
+#menuleft{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    place-items: start;
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+#menuright{
+    grid-column-start: 3;
+    grid-column-end: 3;
+    place-items: end;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+}
+
+#closekundvagn{
+    top: 10px;
+    right: 10;
+    position: absolute;
+}
+
+.prodCont{
+    width: 100%;
+    display:inline-grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+    place-items: center;
+    
+}
+.prodCard{
+    background-color: none;
+    position: relative;
+    height: 300px;
+    width: 150px;
+
+    margin-bottom: 20px;
+    color: var(--clr-neon-g);
+    cursor: pointer;
+    text-decoration: none;
+    border: 0.125em solid var(--clr-neon-g);
+    padding: 0.25em 1em;
+    border-radius: 0.25em;
+
+    text-shadow: 
+    0 0 0.125em 
+    hsl(0 0% 100% / 0.3),
+    0 0 0.5em currentColor;
+
+    box-shadow: 
+    inset 0 0 0.3em 0 var(--clr-neon-g),
+    0 0 0.5em 0 var(--clr-neon-g);
+
+}
+
+.prodCard:hover{
+    box-shadow: 0 0 2em 0 var(--clr-neon-g);
+}
+
+.cardTitle{
+    font-size: 1.5rem;
+    text-align: center;
+    color: white;
+    padding: 5px;
+}
+
+.picCont{
+    
+    display:grid;
+    width: 100%;
+    place-items: center;
+    
+}
+.cardPic{
+    /*background-color: violet;*/
+    width: 70%;
+    height: 100px;
+
+}
+.prodInfoCont{
+    border-top: 00.125em solid var(--clr-neon-g);
+    color: white;
+    
+    margin-top: 10px;
+}
+
+
+
+/*Kundvagn slidein */
+@-webkit-keyframes slideIn {
+    0% {
+      transform: translatey(-500px);
+    }
+    100% {
+      transform: translatey(0);
+    }
+  }
+
+@-moz-keyframes slideIn {
+    0% {
+      transform: translatey(-500px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+@keyframes slidein {
+    0% {
+      transform: translatey(-500px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+.loggaindiv{
+    display: flex;
+    margin-top: 50px;
+    
+    align-items: center;
+    justify-content: center;
+    
+    
+    
+    
+}
+
+.taggbredd{
+    width: min-content;
+}
+
+.loggainform{
+    
+    display: flex;
+    
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 200px;
+    
+
+    font-family: 'Roboto', sans-serif;
+
+    top: -10px;
+    font-size: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--clr-neon-g);
+    cursor: pointer;
+    text-decoration: none;
+    border: 0.125em solid var(--clr-neon-g);
+    padding: 0.25em 1em;
+    border-radius: 0.25em;
+
+    text-shadow: 
+    0 0 0.125em 
+    hsl(0 0% 100% / 0.3),
+    0 0 0.5em currentColor;
+
+    box-shadow: 
+    inset 0 0 0.3em 0 var(--clr-neon-g),
+    0 0 0.5em 0 var(--clr-neon-g);
+
+    position: relative;
+}
+
+
+#logincanvas{
+    height: 100vh;
+    width: 100vw;
+    z-index: 0;
+   
+    position: absolute;
+    top: 0;
+}

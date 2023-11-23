@@ -1,0 +1,183 @@
+<html>
+<head>
+		<script>
+				var c;
+			  var mx,my,mb=0;
+				var boxes=[];
+			
+				var v=0;
+				var delay=Math.random()*100;
+			
+				// Bounding box intersection
+				function intersect(box1,box2)
+				{
+						if(box2.x1>box1.x2) return false;
+						if(box2.x2<box1.x1) return false;
+						if(box2.y1>box1.y2) return false;
+						if(box2.y2<box1.y1) return false;
+						return true;
+				}
+			
+				function setup()
+				{
+						var cc = document.getElementById("myCanvas");
+				    c = cc.getContext("2d");
+					
+						boxes.push({x1:300,y1:0,x2:400,y2:100,v:0.5,vx:0.7,vy:0});
+						boxes.push({x1:300,y1:600,x2:400,y2:700,v:0.5,vx:0.7,vy:0});
+					
+						setInterval(updatestate,20);
+					
+						drawit();
+				}
+								
+				function updatestate()
+				{
+						v++;
+						var enemy=boxes[0];
+						
+						if(v>delay){
+								v=0;
+								delay=100+(Math.random()*100);
+								boxes.push({x1:enemy.x1,y1:enemy.y1,x2:enemy.x2,y2:enemy.y2,v:0.5,vx:enemy.vx*0.5,vy:0.5+(Math.random()*0.5)});
+						}
+					
+						var player=boxes[1];
+						if(player.x1>mx) player.vx=-0.7;
+						if(player.x2<mx) player.vx=0.7;
+					
+						for(var i=0;i<boxes.length;i++){
+								var item=boxes[i];
+								
+								item.x1+=item.vx;
+								item.x2+=item.vx;
+								item.y1+=item.vy;
+								item.y2+=item.vy;
+							
+								if(item.x1>800) item.vx=-item.vx;
+								if(item.x1<0) item.vx=-item.vx;
+						}
+					
+						for(var i=boxes.length-1;i>1;i--){
+								var item=boxes[i];
+								if(intersect(item,player)) boxes.splice(i,1);
+						}
+				}
+			
+				function mouseUp(e)
+				{
+						if(mb==1){
+								alert("du klickade i "+curr);
+						}
+						
+						mb=0;
+				}
+			
+				function mouseDown(e)
+				{
+						mb=e.which;
+				}
+			
+				function mouseMove(e,t)
+				{
+						var rect = e.target.getBoundingClientRect();
+            mx = e.clientX - rect.left; //x position within the element.
+            my = e.clientY - rect.top;  //y position within the element
+				}
+			
+				function drawit()
+				{	
+						c.clearRect(0,0,900,900);
+					
+						c.font="20px Arial Narrow";
+						c.fillText("Mb:"+mb,100,50);
+					
+						c.beginPath();
+						c.moveTo(0,0);
+						c.lineTo(mx,my);
+						c.stroke();
+					
+						for(var i=0;i<boxes.length;i++){
+								var item=boxes[i];
+								
+							  c.save();
+
+								c.translate(item.x1,item.y1);
+
+								c.beginPath();
+								c.rect(5,5,95,95);
+								c.stroke();
+
+								c.translate(50,50);								
+
+								c.scale(item.v,item.v);
+
+								Box();
+
+								c.restore();
+						}
+					
+						window.requestAnimationFrame(drawit);
+				} 			
+			
+				function Box(){
+					 c.globalAlpha=1.0;
+							//--==## Rightside_1_ polygon ##==--
+					 c.fillStyle='#009444';
+					 c.beginPath();
+					 c.moveTo(-66,-18);
+					 c.lineTo(-66,54);
+					 c.lineTo(1,69);
+					 c.lineTo(2,-10);
+					 c.lineTo(-66,-18);
+					 c.fill();
+							//--==## Leftside_1_ polygon ##==--
+					 c.fillStyle='#006838';
+					 c.beginPath();
+					 c.moveTo(67,55);
+					 c.lineTo(1,69);
+					 c.lineTo(2,-10);
+					 c.lineTo(66,-23);
+					 c.lineTo(67,55);
+					 c.fill();
+							//--==## Ribbon_3_ polygon ##==--
+					 c.fillStyle='#FBB040';
+					 c.beginPath();
+					 c.moveTo(-42,-15);
+					 c.lineTo(-25,-13);
+					 c.lineTo(-25,63);
+					 c.lineTo(-41,60);
+					 c.lineTo(-42,-15);
+					 c.fill();
+							//--==## Ribbon_2_ polygon ##==--
+					 c.fillStyle='#F15A29';
+					 c.beginPath();
+					 c.moveTo(28,-15);
+					 c.lineTo(44,-18);
+					 c.lineTo(45,60);
+					 c.lineTo(28,63);
+					 c.lineTo(28,-15);
+					 c.fill();
+							//--==## BackII polygon ##==--
+					 c.fillStyle='#58595B';
+					 c.beginPath();
+					 c.moveTo(66,-23);
+					 c.lineTo(2,-37);
+					 c.lineTo(2,-10);
+					 c.lineTo(66,-23);
+					 c.fill();
+							//--==## Back polygon ##==--
+					 c.fillStyle='#414042';
+					 c.beginPath();
+					 c.moveTo(-66,-18);
+					 c.lineTo(2,-10);
+					 c.lineTo(2,-37);
+					 c.lineTo(-66,-18);
+					 c.fill();
+				}			
+			
+		</script>
+</head>
+<body onload="setup();">
+ 	<canvas id="myCanvas" onmousedown="mouseDown(event);" onmouseup="mouseUp(event);" onmousemove="mouseMove(event,this);" width="900" height="900" style="border:1px solid #000000;"></canvas> 
+</body>

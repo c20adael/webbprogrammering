@@ -1,0 +1,52 @@
+
+CSS {
+
+
+
+color: rgb(102, 209, 56); Detta är färgen på knappar menyn
+
+}
+
+HTML {
+
+
+}
+
+JAVASCRIPT {
+
+
+}
+
+
+
+ctx.fillStyle = "#00F"; ctx.beginPath(); ctx.moveTo(150, 50); ctx.lineTo(100, 150); ctx.lineTo(200, 150); ctx.closePath(); ctx.fill();
+
+
+/*     var ctx;
+          
+    function drawgraphics()
+    {
+        // Draw a filled and stroked triangle
+        ctx.strokeStyle="#649";
+        ctx.lineWidth=4;
+        ctx.fillStyle="#946";
+
+        ctx.beginPath();
+        ctx.moveTo(80,20);
+        ctx.lineTo(120,140);
+        ctx.lineTo(20,40);
+        ctx.closePath();
+
+        ctx.fill();
+        ctx.stroke();
+    }
+          
+    function startupCanvas()
+    {
+        var elem = document.getElementById('myCanvas1');
+        if (elem && elem.getContext) {
+        ctx = elem.getContext('2d');
+        drawgraphics();
+        }                  
+    }
+*/

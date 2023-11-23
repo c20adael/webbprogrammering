@@ -1,0 +1,614 @@
+<html>
+<head>
+		<link rel="stylesheet" href="style.css">
+		<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+ 		<script>
+		
+		// For students, User name of student to differentiate between different applications on the server
+		var apptype="Hotel_Demo";
+
+		//------------------------------------------------------------------------
+		// fixChars
+		//------------------------------------------------------------------------
+		// Converts all attributes from a notation that uses "%" to "&" which 
+		// allows us to pass non-english characthers as XML
+		//------------------------------------------------------------------------
+
+		function fixChars(returnedData)
+		{
+			var resultset=returnedData.childNodes[0];
+	
+			// Iterate over all nodes in root node recursively and replace the strings inside attributes
+			x=returnedData.getElementsByTagName('*');
+			for (i=0;i<x.length;i++){
+					for(j=0;j<x[i].attributes.length;j++){
+						  x[i].attributes[j].nodeValue=x[i].attributes[j].nodeValue.replace(/%/g,"&");
+					}
+			} 
+		}
+		
+		//------------------------------------------------------------------------
+		// make customer
+		//------------------------------------------------------------------------
+		// Creates a new customer with a given id, name, address etc
+		// Customers are general for ALL booking systems, so no need to add type attribute
+		//------------------------------------------------------------------------
+
+		function storeCustomer()
+		{
+				var customerID=document.getElementById("customerIDC").value;
+				var firstname=document.getElementById("customerfnameC").value;
+				var lastname=document.getElementById("customerlnameC").value;
+				var email=document.getElementById("customeremailC").value;
+				var address=document.getElementById("customeraddressC").value;
+				var auxdata=document.getElementById("customerauxdataC").value;
+
+				var jqxhr = $.ajax( "../booking/makecustomer_XML.php", {
+						type: 'POST',
+						data: { 
+								ID: encodeURIComponent(customerID),
+								firstname: encodeURIComponent(firstname),
+								lastname: encodeURIComponent(lastname),
+								email: encodeURIComponent(email),
+								address: encodeURIComponent(address),
+								auxdata: encodeURIComponent(auxdata)
+						}
+				})
+				.done(ResultBookingCustomer)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request for storing customer "+firstname+" "+lastname+" has completed." );
+				});
+		}
+	
+		function ResultCustomern(returnedData)
+		{
+			// Iterate over all nodes in root node (i.e. the 'created' element in root which has an attribute called status)
+			for (i = 0; i < returnedData.childNodes.length; i++) {
+					if(returnedData.childNodes.item(i).nodeName=="created"){
+						alert(returnedData.childNodes.item(i).attributes['status'].value);
+					}
+			}
+		}				
+
+		// make customer END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+
+		//------------------------------------------------------------------------
+		// get customer
+		//------------------------------------------------------------------------
+		// Reads the customer information for the given customerID
+		// This can be used for creating a login function, since no information is returned if customer does not exist
+		//------------------------------------------------------------------------
+
+		function showCustomer()
+		{
+				var customerID=document.getElementById("customerIDG").value;
+		
+				var jqxhr = $.ajax( "../booking/getcustomer_XML.php", {
+						type: 'POST',
+						data: { 
+								customerID: encodeURIComponent(customerID)
+						}
+				})
+				.done(ResultCustomers)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request for showing customers complete." );
+				});
+		}
+	
+		function ResultCustomers(returnedData)
+		{
+				// Fix characters in XML notation to HTML notation
+				fixChars(returnedData);
+
+				var resultset=returnedData.childNodes[0];
+		
+				// Iterate over all nodes in root node (i.e. customers)
+				for (i = 0; i < resultset.childNodes.length; i++) {
+						// Iterate over all child nodes of that node that are customer nodes
+						if(resultset.childNodes.item(i).nodeName=="customer"){
+								// Retrieve first name and last name for node
+								var customer=resultset.childNodes.item(i);
+								var div=document.getElementById('CustomerOutputDiv');
+								output=customer.attributes['id'].value;
+								output+=' '+customer.attributes['firstname'].value;
+								output+=' '+customer.attributes['lastname'].value;
+								output+=' '+customer.attributes['address'].value;
+								output+=' '+customer.attributes['email'].value;
+								output+=' '+customer.attributes['lastvisit'].value;
+								output+=' '+customer.attributes['auxdata'].value;
+								div.innerHTML=output;
+						}
+				}
+		}				
+
+		// get customer END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+
+		//------------------------------------------------------------------------
+		// search resources
+		//------------------------------------------------------------------------
+		// Searches through the resources for a certain application. 
+		// If only type is given all resources for application are given
+		// If either company, location or name are given in any combination, these values are searched
+		// If fulltext is given all attributes are searched at once 
+		//------------------------------------------------------------------------
+		
+		function searchResources()
+		{
+				var resname=document.getElementById("resNameS").value;
+				var reslocation=document.getElementById("resLocationS").value;
+				var rescompany=document.getElementById("resCompanyS").value;
+				var resfulltext=document.getElementById("resFulltextS").value;
+				var resID=document.getElementById("resIDS").value;
+
+				var jqxhr = $.ajax( "../booking/getresources_XML.php", {
+						type: 'POST',
+						data: { 
+								resID:encodeURIComponent(resID),
+								name:encodeURIComponent(resname),
+								location:encodeURIComponent(reslocation),
+								company:encodeURIComponent(rescompany),
+								fulltext:encodeURIComponent(resfulltext),
+								type:apptype		// Only show bookings for your webbapplication using the apptype
+						}
+				})
+				.done(showResources)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request all resources for webbapplication "+apptype+" complete." );
+				});
+		}
+
+		function showResources(returnedData)
+		{
+				// Fix characters in XML notation to HTML notation
+				fixChars(returnedData);
+				
+				// An XML DOM document is returned from AJAX
+				var resultset=returnedData.childNodes[0];
+				var output="<table>";
+				// Iterate over all nodes in root node (i.e. resources)
+				for (i = 0; i < resultset.childNodes.length; i++) {
+						// Iterate over all child nodes of that node that are resource nodes
+						if(resultset.childNodes.item(i).nodeName=="resource"){
+								// Retrieve data from resource nodes
+								var resource=resultset.childNodes.item(i);
+								output+="<tr class='actiontablerow' onclick='alert(\""+resource.attributes['id'].value+"\")'>";
+								output+="<td>"+resource.attributes['id'].value+"</td>";
+								output+="<td>"+resource.attributes['company'].value+"</td>";
+								output+="<td>"+resource.attributes['name'].value+"</td>";
+								output+="<td>"+resource.attributes['location'].value+"</td>";
+								output+="<td>"+resource.attributes['category'].value+"</td>";
+								output+="</tr>";
+										
+						}
+				}
+
+				output+="</table>"
+				var div=document.getElementById("OutputDivSearchR");
+				div.innerHTML=output;
+		}				
+			
+		// search resources END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+
+		//------------------------------------------------------------------------
+		// search availability
+		//------------------------------------------------------------------------
+	  // Get the availability for a certain resource by searching name, location and company in addition to the type
+    // This is useful if we do not want to enter a date first, but rather to se a list of available time/date slots for resources
+		// Output: resourceID, name, location, company, size, cost, category, date, dateto, bookingcount, bookingcost, bookingclass, remaining
+		//         returns each availabile slot for that resource
+		//------------------------------------------------------------------------
+		
+		function searchAvailability()
+		{
+				var resID=document.getElementById("resIDA").value;	
+				var resname=document.getElementById("resNameA").value;
+				var reslocation=document.getElementById("resLocationA").value;
+				var rescompany=document.getElementById("resCompanyA").value;
+				var resfulltext=document.getElementById("resFulltextA").value;
+
+				var jqxhr = $.ajax( "../booking/getavailability_search_XML.php", {
+						type: 'POST',
+						data: { 
+								resID:encodeURIComponent(resID),
+								name:encodeURIComponent(resname),
+								location:encodeURIComponent(reslocation),
+								company:encodeURIComponent(rescompany),
+								fulltext:encodeURIComponent(resfulltext),
+								type:apptype		// Only show bookings for your webbapplication using the apptype
+						}
+				})
+				.done(showAvailability)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request for resource availability for webbapplication "+apptype+" complete." );
+				});
+		}
+
+		function showAvailability(returnedData)
+		{
+				// Fix characters in XML notation to HTML notation
+				fixChars(returnedData);
+
+				// An XML DOM document is returned from AJAX
+				var resultset=returnedData.childNodes[0];
+				var output="<table>";
+				// Iterate over all nodes in root node (i.e. resources)
+				for (i = 0; i < resultset.childNodes.length; i++) {
+						// Iterate over all child nodes of that node that are resource nodes
+						if(resultset.childNodes.item(i).nodeName=="availability"){
+								// Retrieve data from resource nodes
+								var avail=resultset.childNodes.item(i);
+								output+="<tr class='actiontablerow' onclick='alert(\""+avail.attributes['resourceID'].value+"\")'>";
+								output+="<td>"+avail.attributes['resourceID'].value+"</td>";
+								output+="<td>"+avail.attributes['company'].value+"</td>";
+								output+="<td>"+avail.attributes['name'].value+"</td>";
+								output+="<td>"+avail.attributes['location'].value+"</td>";
+								output+="<td>"+avail.attributes['size'].value+"</td>";
+								output+="<td>"+avail.attributes['cost'].value+"</td>";
+								output+="<td>"+avail.attributes['category'].value+"</td>";
+								output+="<td>"+avail.attributes['date'].value+"</td>";
+								output+="<td>"+avail.attributes['dateto'].value+"</td>";
+								output+="<td>"+avail.attributes['bookingcount'].value+"</td>";
+								output+="<td>"+avail.attributes['remaining'].value+"</td>";
+								output+="</tr>";										
+						}
+				}
+
+				output+="</table>"
+				var div=document.getElementById("OutputDivSearchA");
+				div.innerHTML=output;
+		}				
+			
+		// search availability END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+
+		//------------------------------------------------------------------------
+		// Get Bookings
+		//------------------------------------------------------------------------
+
+		function getBookings()
+		{
+				resource=document.getElementById("resNameGB").value;
+				bookingdate=document.getElementById("dateGB").value;
+									        
+				var jqxhr = $.ajax( "../booking/getbookings_XML.php", {
+						type: 'POST',
+						data: { 
+								resourceID:resource,
+								date:bookingdate,
+								type:apptype		// Only show bookings for your webbapplication using the apptype
+						}
+				})
+				.done(ResultBooking)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request bookings for resource "+resource+" for webbapplication "+apptype+" complete." );
+				});
+		}
+
+		function ResultBooking(returnedData)
+		{
+				// Fix characters in XML notation to HTML notation
+				fixChars(returnedData);
+
+				// An XML DOM document is returned from AJAX
+				var resultset=returnedData.childNodes[0];
+
+				var output="<table>";
+
+				// Iterate over all nodes in root node (i.e. customers)
+				for (i = 0; i < resultset.childNodes.length; i++) {
+						if(resultset.childNodes.item(i).nodeName=="booking"){
+								// Retrieve position from the returned booking
+								var booking=resultset.childNodes.item(i);
+								output+="<tr>";
+								output+="<td>"+booking.attributes['position'].value+"</td>";
+								output+="<td>"+booking.attributes['date'].value+"</td>";
+								output+="<td>"+booking.attributes['dateto'].value+"</td>";
+								output+="</tr>";
+						}
+				}
+				output+="</table>"
+				var div=document.getElementById('OutputDivBooked');
+				div.innerHTML=output;
+		}				
+
+		// get Bookings END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+		
+		//------------------------------------------------------------------------
+		// make booking
+		//------------------------------------------------------------------------
+		// Creates a new booking for a certain application
+		//   If status contains an other value than 1 it is a temporary booking
+		//   All temporary bookings are removed when a real booking is made
+		//   Not all booking systems have positions e.g. seats on aeroplane or in movie theater in that case use 0
+		//   Rebate is optional
+		//   Auxdata can be used to store additional information about the booking (any relevant information)
+		//------------------------------------------------------------------------
+ 
+		function makeBooking()
+		{
+				var customerID=document.getElementById("customerIDB").value;
+				var resourceID=document.getElementById("resourceIDB").value;
+				var date=document.getElementById("dateB").value;
+				var dateto=document.getElementById("dateToB").value;
+				var rebate=document.getElementById("rebateB").value;
+				var statusb=document.getElementById("statusB").value;
+				var position=document.getElementById("positionB").value;
+				var auxdata=document.getElementById("auxDataB").value;
+				
+				alert(customerID+" "+resourceID+" "+date+" "+rebate+" "+statusb+" "+position+" "+auxdata);
+
+				var jqxhr = $.ajax( "../booking/makebooking_XML.php", {
+						type: 'POST',
+						data: { 
+								resourceID:resourceID,
+								date:date,
+								dateto:dateto,
+								customerID:customerID,
+								rebate:rebate,
+								status:statusb, // 2 = "Real" booking.
+								position:position,
+								type:apptype		// Only show bookings for your webbapplication using the apptype
+						}
+				})
+				.done(ResultBooking)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request bookings for resource "+resource+" for webbapplication "+apptype+" complete." );
+				});
+		}
+
+		function bookingmade(returnedData)
+		{
+				alert('booked!');
+				console.log(returnedData);
+		}
+
+		// make booking END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+
+		//------------------------------------------------------------------------
+		// Delete booking
+		//------------------------------------------------------------------------
+		// Deletes a booking made by a customer on a resource at a certain date start date 
+		//------------------------------------------------------------------------
+
+		function deleteBooking()
+		{
+				var customerID = document.getElementById("customerIDD").value;
+				var resourceID = document.getElementById("resourceIDD").value;
+				var date = document.getElementById("dateD").value;
+				
+				alert("CustomerID: " + customerID + " ResourceID: " + resourceID + " Date: " + date);
+				var jqxhr = $.ajax( "../booking/deletebooking_XML.php", {
+						type: 'POST',
+						data: { 
+								resourceID: resourceID,
+								date: date,
+								customerID: customerID
+						}
+				})
+				.done(deletemade)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request to delete booking for webbapplication "+apptype+" complete." );
+				});
+		}
+		
+		function deletemade()
+		{
+				alert("Delete was a success");
+		}
+		
+		// delete booking END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+		
+		
+		//------------------------------------------------------------------------
+		// get customer bookings
+		//------------------------------------------------------------------------
+		// Returns the set of bookings made by a given customer
+		// This function thus implements a traditional shopping cart
+		//------------------------------------------------------------------------
+	
+		function processinputbox()
+		{
+				customer =document.getElementById("customerID").value;
+				var jqxhr = $.ajax( "../booking/getcustomerbookings_XML.php", {
+						type: 'POST',
+						data: { 
+								customerID: encodeURIComponent(customer),
+								type:apptype		// Only show bookings for your webbapplication using the apptype
+						}
+				})
+				.done(ResultBookingCustomer)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request bookings for customer "+customer+" for webbapplication "+apptype+" complete." );
+				});
+		}
+
+		function ResultBookingCustomer(returnedData)
+		{
+			// Fix characters in XML notation to HTML notation
+			fixChars(returnedData);
+
+			// An XML DOM document is returned from AJAX
+			var resultset=returnedData.childNodes[0];
+
+			var output="<table>";
+			
+			// Iterate over all nodes in root node (i.e. bookings)
+			for (i = 0; i < resultset.childNodes.length; i++) {
+				// Iterate over all child nodes of that node that are booking nodes
+				if(resultset.childNodes.item(i).nodeName=="booking"){
+					// Retrieve first name and last name for node
+					var booking=resultset.childNodes.item(i);
+			
+					output+="<tr class='actiontablerow'>";
+					output+="<td>"+booking.attributes['company'].value+"</td>";
+					output+="<td>"+booking.attributes['name'].value+"</td>";
+					output+="<td>"+booking.attributes['location'].value+"</td>";
+					output+="<td>"+booking.attributes['date'].value+"</td>";
+					output+="</tr>";
+			
+				}
+			}
+
+			output+="</table>"
+			var div=document.getElementById('OutputDiv');
+			div.innerHTML=output;
+		}	
+		
+		// get customer bookings END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+		
+		//------------------------------------------------------------------------
+		// get html file contents
+		//------------------------------------------------------------------------
+		// Returns the text of a html file
+		//------------------------------------------------------------------------
+	
+		function readFile()
+		{
+				filename = document.getElementById("fileR").value;
+				
+				var jqxhr = $.ajax( "../booking/getfile_XML.php", {
+						type: 'POST',
+						data: { 
+								filename: encodeURIComponent(filename),
+						}
+				})
+				.done(fileread)
+				.fail(errormsg)
+				.always(function() {
+						console.log( "Request to read file complete." );
+				});
+		}
+
+		function fileread(returnedData)
+		{
+			var div=document.getElementById('OutputDivFile');
+			div.innerHTML=returnedData;
+		}	
+		
+		// get file contents END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+
+		//------------------------------------------------------------------------
+		// error message callback
+		//------------------------------------------------------------------------
+    // The errror message callback displays the error message and error code
+		//------------------------------------------------------------------------
+
+		function errormsg(jqXHR,textStatus,errorThrown)
+		{
+				console.log(jqXHR);
+				alert("AJAX Error:\n"+errorThrown);
+		}
+
+		// error message callback END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+		
+		</script>
+</head>
+<body>
+
+	<div class="actionbox">
+			<span class="actionheading">Create Customer</span>
+			CustID:<input type='text' name='customerIDC' id='customerIDC'>
+			Custfname:<input type='text' name='customerfnameC' id='customerfnameC'>
+			Custlname:<input type='text' name='customerlnameC' id='customerlnameC'><br/>
+			Custemail:<input type='text' name='customeremailC' id='customeremailC'>
+			Custaddress:<input type='text' name='customeraddressC' id='customeraddressC'><br/>
+			Cust Auxdata:<input type='text' name='customerauxdataC' id='customerauxdataC'><br/>
+			<input type="button" onclick="storeCustomer();" value="Store Customer">
+	</div>
+
+	<div class="actionbox">
+			<span class="actionheading">Get Customer Data (used for faux log-in)</span>
+			CustID:<input type='text' name='customerIDG' id='customerIDG' onchange="showCustomer()" onkeyup="showCustomer()">
+			<span class="actionheading">Result</span>
+			<div id="CustomerOutputDiv" />Customer Information</div>
+	</div>
+
+	<div class="actionbox">
+			<span class="actionheading">Search Resources (search resources given an ID or any or all of name,location,company or any of the above)</span>
+			ID:<input type='text' name='resIDS' id='resIDS' onchange="searchResources()" onkeyup="searchResources()">
+			Name:<input type='text' name='resNameS' id='resNameS' onchange="searchResources()" onkeyup="searchResources()"><br/>
+			Location:<input type='text' name='resLocationS' id='resLocationS' onchange="searchResources()" onkeyup="searchResources()">
+			Company:<input type='text' name='resCompanyS' id='resCompanyS' onchange="searchResources()" onkeyup="searchResources()"><br/>
+			Full Text:<input type='text' name='resFulltextS' id='resFulltextS' onchange="searchResources()" onkeyup="searchResources()"><br/>
+			<input type="button" onclick="searchResources();" value="Search Resource">			
+			<span class="actionheading">Result</span>
+			<div id="OutputDivSearchR" /></div>
+	</div>
+
+	<div class="actionbox">
+			<span class="actionheading">Search Availability (show the availability for a given Resource ID)</span>
+			ResourceID:<input type='text' name='resIDA' id='resIDA' onchange="searchAvailability()" onkeyup="searchAvailability()">
+			Name:<input type='text' name='resNameA' id='resNameA' onchange="searchAvailability()" onkeyup="searchAvailability()">
+			Location:<input type='text' name='resLocationA' id='resLocationA' onchange="searchAvailability()" onkeyup="searchAvailability()">
+			Company:<input type='text' name='resCompanyA' id='resCompanyA' onchange="searchAvailability()" onkeyup="searchAvailability()"><br/>
+			Full Text:<input type='text' name='resFulltextA' id='resFulltextA' onchange="searchAvailability()" onkeyup="searchAvailability()"><br/>
+			<input type="button" onclick="searchAvailability();" value="Search Availability">			
+			<span class="actionheading">Result</span>
+			<div id="OutputDivSearchA" /></div>
+	</div>
+
+	<div class="actionbox">
+			<span class="actionheading">Get Bookings (get all bookings for a given resource ID)</span>
+			ResourceID:<input type='text' name='resNameGB' id='resNameGB' >
+			Date:<input type='text' name='dateGB' id='dateGB' ><br/>
+			<input type="button" onclick="getBookings();" value="Get Bookings">			
+			<span class="actionheading">Result</span>
+			<div id="OutputDivBooked" /></div>
+	</div>
+		
+	<div class="actionbox">
+			<span class="actionheading">Make Booking</span>
+			CustID:<input type='text' name='customerIDB' id='customerIDB'>
+			ResourceID:<input type='text' name='resourceIDB' id='resourceIDB'>
+			Date:<input type='text' name='dateB' id='dateB'>
+			Date To:<input type='text' name='dateToB' id='dateToB'><br/>
+			Rebate:<input type='text' name='rebateB' id='rebateB'>
+			Status:<input type='text' name='statusB' id='statusB'>
+			Position:<input type='text' name='positionB' id='positionB'><br/>
+			Aux Data:<input type='text' name='auxDataB' id='auxDataB'><br/>
+
+			<input type="button" onclick="makeBooking();" value="Make Booking">
+	</div>
+
+	<div class="actionbox">
+			<span class="actionheading">Delete Booking (delete booking given customer ID, resourceID and date)</span>
+			CustID:<input type='text' name='customerIDD' id='customerIDD'>
+			ResourceID:<input type='text' name='resourceIDD' id='resourceIDD'>
+			Date:<input type='text' name='dateD' id='dateD'>
+			<input type="button" onclick="deleteBooking();" value="Delete Booking">
+	</div>
+	
+	<div class="actionbox">
+			<span class="actionheading">Bookings Shopping Cart (show bookings for a customer ID)</span>
+			CustID:<input type='text' name='customerID' id='customerID' onchange="processinputbox()" onkeyup="processinputbox()">
+			<span class="actionheading">Result</span>
+			<div id="OutputDiv" /></div>
+	</div>
+
+	<div class="actionbox">
+			<span class="actionheading">Read html file</span>
+			Filename:<input type='text' name='fileR' id='fileR'>
+			<input type="button" onclick="readFile();" value="Read File">
+			<span class="actionheading">Result</span>
+			<div id="OutputDivFile" /></div>
+	</div>
+	
+</body>
+</html>

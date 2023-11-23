@@ -1,0 +1,113 @@
+<html>
+<head>
+		<link rel="stylesheet" href="style.css">
+		<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+		<script>
+		
+		// For students, User name of student to differentiate between different applications on the server
+		var apptype="Hotel_Demo";
+
+		//------------------------------------------------------------------------
+		// fixChars
+		//------------------------------------------------------------------------
+		// Converts all attributes from a notation that uses "%" to "&" which 
+		// allows us to pass non-english characthers as XML
+		//------------------------------------------------------------------------
+
+		function fixChars(returnedData)
+		{
+			var resultset=returnedData.childNodes[0];
+	
+			// Iterate over all nodes in root node recursively and replace the strings inside attributes
+			x=returnedData.getElementsByTagName('*');
+			for (i=0;i<x.length;i++){
+					for(j=0;j<x[i].attributes.length;j++){
+						  x[i].attributes[j].nodeValue=x[i].attributes[j].nodeValue.replace(/%/g,"&");
+					}
+			} 
+		}
+		
+		//------------------------------------------------------------------------
+		// get customer bookings
+		//------------------------------------------------------------------------
+		// Returns the set of bookings made by a given customer
+		// This function thus implements a traditional shopping cart
+		//------------------------------------------------------------------------
+	
+		function processinputbox()
+		{
+				customer =document.getElementById("customerID").value;
+				var jqxhr = $.ajax( "../booking/getcustomerbookings_XML.php", {
+						method:"POST",
+						data:{
+								customerID: encodeURIComponent(customer),
+								type:apptype		// Only show bookings for your webbapplication using the apptype
+						}
+				})
+				.done(ResultBookingCustomer)
+				.fail(errormsg)
+				.always(function() {
+					console.log( "Request bookings for customer "+customer+" has completed." );
+				});
+		}
+
+		function ResultBookingCustomer(returnedData)
+		{
+			// Fix characters in XML notation to HTML notation
+			//fixChars(returnedData);
+
+			// An XML DOM document is returned from AJAX
+			var resultset=returnedData.childNodes[0];
+
+			var output="<table>";
+			
+			// Iterate over all nodes in root node (i.e. bookings)
+			for (i = 0; i < resultset.childNodes.length; i++) {
+				// Iterate over all child nodes of that node that are booking nodes
+				if(resultset.childNodes.item(i).nodeName=="booking"){
+					// Retrieve first name and last name for node
+					var booking=resultset.childNodes.item(i);
+			
+					output+="<tr class='actiontablerow'>";
+					output+="<td>"+booking.attributes['company'].nodeValue+"</td>";
+					output+="<td>"+booking.attributes['name'].nodeValue+"</td>";
+					output+="<td>"+booking.attributes['location'].nodeValue+"</td>";
+					output+="<td>"+booking.attributes['date'].nodeValue+"</td>";
+					output+="</tr>";
+			
+				}
+			}
+
+			output+="</table>"
+			var div=document.getElementById('OutputDiv');
+			div.innerHTML=output;
+		}	
+
+		//------------------------------------------------------------------------
+		// error message callback
+		//------------------------------------------------------------------------
+		// The errror message callback displays the error message and error code
+		//------------------------------------------------------------------------
+
+		function errormsg(jqXHR,textStatus,errorThrown)
+		{
+				console.log(jqXHR);
+				alert("AJAX Error:"+errorThrown);
+		}
+
+		// error message callback END
+		//--=--=--=--=--=--=--=--=--=--====######====--=--=--=--=--=--=--=--=--=--
+		
+		</script>
+</head>
+<body>
+	
+	<div class="actionbox">
+			<span class="actionheading">Bookings Shopping Cart (show bookings for a customer ID)</span>
+			CustID:<input type='text' name='customerID' id='customerID' onchange="processinputbox()" onkeyup="processinputbox()">
+			<span class="actionheading">Result</span>
+			<div id="OutputDiv" /></div>
+	</div>
+	
+</body>
+</html>
