@@ -172,11 +172,6 @@ function getVarukorg(x, y) {
     if (y == 1) {
         var div = document.getElementById("testcont");
         div.innerHTML = x
-        /* var item = document.createElement("div");
-        item.innerHTML = x;
-        item.id = x;
-        item.value = x;
-        testcont.appendChild(item); */
     }
     else if (y == 2) {
         document.getElementById(x).remove();
