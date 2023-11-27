@@ -64,8 +64,9 @@ function validateAdress(adress) {
 
 /*----------------------------------Sidnavigering---------------------------------------*/
 function showpage(pageid) {
+    console.log(document.getElementById("page6").getAttribute("style"));
     if (pageid == "page6") {
-        /*Denna ifsats gör att kundvagnen visas uppepå de andra sidorna*/
+        /*Shows the varukorg ontop of the other pages*/
         document.getElementById(pageid).style.display = "block";
         goShow();
     }
@@ -74,7 +75,14 @@ function showpage(pageid) {
         for (var i = 0; i < pages.length; i++) {
             pages[i].style.display = "none";
         }
-        goHide();
+
+        /*Just checking if the animation for the removal of the varukorg should play */
+        var varukorgdiv = document.getElementById('page6');
+        var computedStyle = window.getComputedStyle(varukorgdiv);
+        var isDisplayStyleNone = computedStyle.display === 'none';
+        if(isDisplayStyleNone== false){
+            goHide();
+        }
     }
     console.log(document.getElementById(pageid));
     document.getElementById(pageid).style.display = "block";
