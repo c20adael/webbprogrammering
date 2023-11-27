@@ -246,7 +246,7 @@ function datepickerhistory(){
 
 
 
-/*-------------------Loggar in användaren och matchar användarid med databasen */
+/*-------------------Loggar in användaren och matchar användarid med databasen------------------------------*/
 var customerGET = "";
 function GetCusomerFunctionCaller() {
     event.preventDefault();
@@ -304,6 +304,8 @@ function GetUserOnClickMinSida() {
 
     });
 
+
+    /*--------------------------------This part gets the customers bookings------------------------------------*/
     $.ajax({
         type: 'POST',
         url: 'Webbprogrammering-API-2014-/booking/getcustomerbookings_XML.php',
@@ -318,15 +320,17 @@ function GetUserOnClickMinSida() {
 
 
 }
+
+/*-------------------------------Here we generate the information about the customer on his page-------------------------------------*/
 function GenerateMinSida(returnedData) {
     var resultset = returnedData.childNodes[0];
     var output="<table>";
 
     for (i = 0; i < resultset.childNodes.length; i++) {
-        // Iterate over all child nodes of that node that are booking nodes
+        // Iterate over all child nodes of that node that are customer nodes
         if (resultset.childNodes.item(i).nodeName == "customer") {
 
-            // Retrieve first name and last name for node
+            // Retrieve and display attrubutes from database
             var customer = resultset.childNodes.item(i);
                 output+="<tr><td>"+customer.attributes['id'].nodeValue+"</td></tr>";
                 output+="<tr><td>"+customer.attributes['firstname'].nodeValue+"</td></tr>";
@@ -342,6 +346,8 @@ function GenerateMinSida(returnedData) {
 
 }
 
+
+/*-----------------------------------This function generates a table with the customers bookings and displays it---------------------------------*/
 function generateBookingHistory(returnedData){
     console.log(returnedData)
     var resultset = returnedData.childNodes[0];
@@ -353,7 +359,7 @@ function generateBookingHistory(returnedData){
         if (resultset.childNodes.item(i).nodeName == "booking") {
             output+="<tr>";
 
-            // Retrieve first name and last name for node
+            // Retrieve and display data from database
             var customer = resultset.childNodes.item(i);
                 output+="<td>"+customer.attributes['date'].nodeValue+"</td>";
                 output+="<td>"+customer.attributes['dateto'].nodeValue+"</td>";
@@ -370,6 +376,7 @@ function generateBookingHistory(returnedData){
 	div.innerHTML=output;
 
 }
+/*--------------------------------------------------------------------*/
 
 
 
@@ -472,10 +479,10 @@ function GenerateSearchResult(returnedData) {
     //var output="<table>";
     var output="<div class='prodCont'>";
     for (i = 0; i < resultset.childNodes.length; i++) {
-        // Iterate over all child nodes of that node that are booking nodes
+        // Iterate over all child nodes of that node that are resource nodes
         if (resultset.childNodes.item(i).nodeName == "resource") {
 
-            // Retrieve first name and last name for node
+            // Retrieve data from database and display it on search page
             var resource = resultset.childNodes.item(i);
 
             console.log(regex.test(resource.attributes['name'].nodeValue));
