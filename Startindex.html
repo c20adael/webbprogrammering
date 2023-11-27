@@ -73,7 +73,7 @@
         <div>
             
             <div id="testcont"></div>
-
+            <div id="idCont"></div>
             <div>Från:<input type="text" id="from" name="from" onchange="datepickerhistory();"></div>
             <div>Till:<input type="text" id="to" name="to"></div>
             <div>Kund:<input type="text" id="bookingName"></div>
@@ -101,6 +101,11 @@
         <h1>Profil</h1>
         <div>
             <div id="MinSidaDiv"></div>
+            <div id="histCont">
+                <h1 id="histHeading">Gjorda Bokningar:</h1>
+                <div id="bokningsHistorik">Inget bokat</div>
+            </div>
+            
             <div><button id="logout" onclick="clearLocalStorage(); showpage('page1');">Logga ut!</button></div>
 
         </div>

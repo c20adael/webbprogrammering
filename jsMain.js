@@ -121,7 +121,7 @@ function showpagehistory(pageid) {
 
 /*---------------------------------Hur Produkten hamnar i kundvagn-------------------------------*/
 var prodLimiter = 0;
-function chooseProd(x) {
+function chooseProd(x, prodID) {
     console.log(x);
     if (document.getElementById("li" + x) == null && prodLimiter == 0) {
         prodLimiter = 1;
@@ -145,7 +145,7 @@ function chooseProd(x) {
         listItem.appendChild(sublitknapp);
         console.log(document.getElementById(x).checked);
         var y = 1;
-        getVarukorg(x, y);
+        getVarukorg(x, y, prodID);
         alertProdChoice(x);
     }
     else if (document.getElementById(x).checked == true) {
@@ -166,11 +166,13 @@ function chooseProd(x) {
 
 /*--------------------Hur Produkterna som är valda hamnar på bokningssidan-------*/
 
-function getVarukorg(x, y) {
+function getVarukorg(x, y, prodID) {
 
     if (y == 1) {
         var div = document.getElementById("testcont");
-        div.innerHTML = x
+        div.innerHTML = x;
+        var idDiv = document.getElementById("idCont");
+        idDiv.innerHTML = prodID;
     }
     else if (y == 2) {
         document.getElementById(x).remove();
@@ -302,13 +304,21 @@ function GetUserOnClickMinSida() {
 
     });
 
+    $.ajax({
+        type: 'POST',
+        url: 'Webbprogrammering-API-2014-/booking/getcustomerbookings_XML.php',
+        data: {
+            customerID: escape(customerGET),
+            type: escape("test 1")
+        },
+        success: generateBookingHistory,
+        error: errormsg
+
+    });
+
 
 }
 function GenerateMinSida(returnedData) {
-
-    console.log(returnedData)
-
-
     var resultset = returnedData.childNodes[0];
     var output="<table>";
 
@@ -318,15 +328,12 @@ function GenerateMinSida(returnedData) {
 
             // Retrieve first name and last name for node
             var customer = resultset.childNodes.item(i);
-            
-                    output+="<tr><td>"+customer.attributes['id'].nodeValue+"</td></tr>";
-                    output+="<tr><td>"+customer.attributes['firstname'].nodeValue+"</td></tr>";
-                    output+="<tr><td>"+customer.attributes['lastname'].nodeValue+"</td></tr>";
-                    output+="<tr><td>"+customer.attributes['address'].nodeValue+"</td></tr>";
-                    output+="<tr><td>"+customer.attributes['email'].nodeValue+"</td></tr>";
-					output+="<tr><td>"+customer.attributes['auxdata'].nodeValue+"</td></tr>";
-                    
-                    
+                output+="<tr><td>"+customer.attributes['id'].nodeValue+"</td></tr>";
+                output+="<tr><td>"+customer.attributes['firstname'].nodeValue+"</td></tr>";
+                output+="<tr><td>"+customer.attributes['lastname'].nodeValue+"</td></tr>";
+                output+="<tr><td>"+customer.attributes['address'].nodeValue+"</td></tr>";
+                output+="<tr><td>"+customer.attributes['email'].nodeValue+"</td></tr>";
+                output+="<tr><td>"+customer.attributes['auxdata'].nodeValue+"</td></tr>";   
         }
     }
     output+="</table>"
@@ -334,6 +341,36 @@ function GenerateMinSida(returnedData) {
 	div.innerHTML=output;    
 
 }
+
+function generateBookingHistory(returnedData){
+    console.log(returnedData)
+    var resultset = returnedData.childNodes[0];
+    var output="<table class='histTable'>";
+    output+="<thead><tr><th>Start</th>  <th>Slut</th>  <th>pos</th>  <th>Cost</th>  <th>category</th>  <th>size</th>  <th>Aux</th></tr></thead>";
+    output+="<tbody>";
+    for (i = 0; i < resultset.childNodes.length; i++) {
+        // Iterate over all child nodes of that node that are booking nodes
+        if (resultset.childNodes.item(i).nodeName == "booking") {
+            output+="<tr>";
+
+            // Retrieve first name and last name for node
+            var customer = resultset.childNodes.item(i);
+                output+="<td>"+customer.attributes['date'].nodeValue+"</td>";
+                output+="<td>"+customer.attributes['dateto'].nodeValue+"</td>";
+                output+="<td>"+customer.attributes['position'].nodeValue+"</td>";
+                output+="<td>"+customer.attributes['cost'].nodeValue+"</td>";
+                output+="<td>"+customer.attributes['category'].nodeValue+"</td>";
+                output+="<td>"+customer.attributes['size'].nodeValue+"</td>"; 
+                output+="<td>"+customer.attributes['auxdata'].nodeValue+"</td>";   
+        }
+        output+="</tr>"
+    }
+    output+="</tbody></table>"
+	var div=document.getElementById('bokningsHistorik');
+	div.innerHTML=output;
+
+}
+
 
 
 /*-----------------------------LOCAL STORAGE FUNKTION--------------------------------*/
@@ -373,8 +410,8 @@ function getCostId(){
 
 /*----------------------------------------Make Booking--------------------------------------*/
 function makebooking(){
-    console.log(document.getElementById("prodtest 1"))
-    var prodID = document.getElementById("prodtest 1").innerHTML;
+    console.log(document.getElementById("idCont"));
+    var prodID = document.getElementById("idCont").innerHTML;
     console.log(prodID);
     var userID = document.getElementById("bookingName").value;
     console.log(userID);
@@ -500,7 +537,7 @@ function showProductsAvalible(returnedData)
 						if(resultset.childNodes.item(i).nodeName=="resource"){
 								// Retrieve data from resource nodes
 								var resource=resultset.childNodes.item(i);
-                                output+="<div class='prodCard' onclick='chooseProd(`"+resource.attributes['name'].value+"`);'>"
+                                output+="<div class='prodCard' onclick='chooseProd(`"+resource.attributes['name'].value+"`, `"+resource.attributes['id'].value+"`);'>"
 								    output+="<div class='cardTitle'>"+resource.attributes['name'].value+"</div>";
                                     
                                     output+="<div class='picCont'>"
