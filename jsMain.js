@@ -487,7 +487,7 @@ function GenerateSearchResult(returnedData) {
 
             console.log(regex.test(resource.attributes['name'].nodeValue));
             if(regex.test(resource.attributes['name'].nodeValue) == true){
-            output+="<div class='prodCard' onclick='chooseProd(`"+resource.attributes['name'].value+"`);'>"
+            output+="<div class='prodCard' onclick='chooseProd(`"+resource.attributes['name'].value+"`, `"+resource.attributes['id'].value+"`);'>"
 					output+="<div class='cardTitle'>"+resource.attributes['name'].value+"</div>";             
                     output+="<div class='picCont'>"
                         output+="<canvas class='cardPic' style='border: 2px solid red;'>";
