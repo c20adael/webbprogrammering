@@ -2,7 +2,6 @@
 /*          https://wwwlab.iit.his.se/c20adael/Webbprogrammering/Webbsida/Webbprogrammering-API-2014-/admin/editresource.php    */
 /*---------------------------------validering av registrering-------------------------------------*/
 function isGreen() {
-    console.log(document.getElementById("username").style.backgroundColor == "rgb(204, 255, 170)")
     if (document.getElementById("username").style.backgroundColor == "rgb(204, 255, 170)" &&
         document.getElementById("fnamn").style.backgroundColor == "rgb(204, 255, 170)" &&
         document.getElementById("enamn").style.backgroundColor == "rgb(204, 255, 170)" &&
@@ -64,7 +63,6 @@ function validateAdress(adress) {
 
 /*----------------------------------Sidnavigering---------------------------------------*/
 function showpage(pageid) {
-    console.log(document.getElementById("page6").getAttribute("style"));
     if (pageid == "page6") {
         /*Shows the varukorg ontop of the other pages*/
         document.getElementById(pageid).style.display = "block";
@@ -84,7 +82,6 @@ function showpage(pageid) {
             goHide();
         }
     }
-    console.log(document.getElementById(pageid));
     document.getElementById(pageid).style.display = "block";
 }
 function hidekundvagn(pageid) {
@@ -96,7 +93,6 @@ function hidekundvagn(pageid) {
 /*---------------------------------------HISTORY CODE----------------------------------------------*/
 
 function historyChange(event) {
-    console.log(event);
     if(event.state.includes('timevar')){
         document.getElementById('from').value = event.state.substring(7);
     }
@@ -104,16 +100,17 @@ function historyChange(event) {
         showpage(event.state);
     }
 }
+
 function updateHistory(token, state) {
     history.pushState(token, "Titel: " + token, "");
-    console.log(updateHistory);
 }
+
 function setupHistory() {
     window.onpopstate = function (event) {
-        console.log("setuph" + event);
         historyChange(event);
     };
 }
+
 function showpagehistory(pageid) {
     showpage(pageid);
     updateHistory(pageid);
@@ -125,11 +122,9 @@ function showpagehistory(pageid) {
 /*---------------------------------Hur Produkten hamnar i kundvagn-------------------------------*/
 var prodLimiter = 0;
 function chooseProd(x, prodID) {
-    console.log(x);
     if (document.getElementById("li" + x) == null && prodLimiter == 0) {
         prodLimiter = 1;
         var list = document.getElementById("ulCart");
-
 
         var listItem = document.createElement("li");
         listItem.innerHTML = x;
@@ -146,7 +141,6 @@ function chooseProd(x, prodID) {
         sublitknapp.innerHTML = "ta bort";
         sublitknapp.onclick = function () { chooseProd(x); };
         listItem.appendChild(sublitknapp);
-        console.log(document.getElementById(x).checked);
         var y = 1;
         getVarukorg(x, y, prodID);
         alertProdChoice(x);
@@ -243,7 +237,6 @@ function alertProdChoice(prod){
 
 function datepickerhistory(){
     updateHistory('timevar'+document.getElementById("from").value);
-    console.log(updateHistory);
 }
 
 
@@ -266,14 +259,12 @@ function GetCusomerFunctionCaller() {
 }
 
 function errormsg(jqXHR, textStatus, errorThrown) {
-    console.log(jqXHR);
     alert("AJAX Error:" + errorThrown);
 }
 
 
 function matchid(returnedData) {
     a=1;
-    console.log(returnedData)
     var resultset = returnedData.childNodes[0];
     for (i = 0; i < resultset.childNodes.length; i++) {
         // Iterate over all child nodes of that node that are booking nodes
@@ -352,14 +343,12 @@ function GenerateMinSida(returnedData) {
 
 /*-----------------------------------This function generates a table with the customers bookings and displays it---------------------------------*/
 function generateBookingHistory(returnedData){
-    console.log(returnedData)
     var resultset = returnedData.childNodes[0];
     if(resultset.childNodes.length==1){
         var output="inga bokningar gjorda";
         var div=document.getElementById('bokningsHistorik');
         div.innerHTML=output;
     }else{
-        console.log(resultset.childNodes.length);
         var output="<table class='histTable'>";
         output+="<thead><tr><th>Produkt</th> <th>Från</th>  <th>Till</th>  <th>Skärm</th> <th>Grafikkort</th> <th>Processor</th> <th>Cost</th> <th>size</th> <th>Ta bort</th></tr></thead>";
         output+="<tbody>";
@@ -392,7 +381,6 @@ function generateBookingHistory(returnedData){
 
 /*---------------------------------Removes a booking from a user-----------------------------------*/
 function removeBooking(bookedProdID, userID, date){
-    console.log(bookedProdID, userID, date)
     $.ajax({
         type: 'POST',
         url: 'Webbprogrammering-API-2014-/booking/deletebooking_XML.php',
@@ -449,19 +437,12 @@ function getCostId(){
 
 /*----------------------------------------Make Booking--------------------------------------*/
 function makebooking(){
-    console.log(document.getElementById("idCont"));
     var prodID = document.getElementById("idCont").innerHTML;
-    console.log(prodID);
     var userID = document.getElementById("bookingName").value;
-    console.log(userID);
     var datefrom = document.getElementById("from").value;
-    console.log(datefrom);
     var dateto = document.getElementById("to").value;
-    console.log(dateto);
-
 
     $.ajax({
-
         type: 'POST',
         url: 'Webbprogrammering-API-2014-/booking/makebooking_XML.php',
         data: {
@@ -472,7 +453,6 @@ function makebooking(){
             type: "test 1"
         },
         success: alert("det gick"),
-
         error: "errormsg"
     });
 
@@ -501,23 +481,15 @@ function searchProd(){
 
 /*--------------------------------------Generate HTML For search result----------------------------------------*/
 function GenerateSearchResult(returnedData) {
-
-    console.log(returnedData)
-
     const regex = new RegExp(document.getElementById('searchValue').value);
-    console.log(regex);
-
     var resultset = returnedData.childNodes[0];
     //var output="<table>";
     var output="<div class='prodCont'>";
     for (i = 0; i < resultset.childNodes.length; i++) {
         // Iterate over all child nodes of that node that are resource nodes
         if (resultset.childNodes.item(i).nodeName == "resource") {
-
             // Retrieve data from database and display it on search page
             var resource = resultset.childNodes.item(i);
-
-            console.log(regex.test(resource.attributes['name'].nodeValue));
             if(regex.test(resource.attributes['name'].nodeValue) == true){
             output+="<div class='prodCard' onclick='chooseProd(`"+resource.attributes['name'].value+"`, `"+resource.attributes['id'].value+"`);'>"
 					output+="<div class='cardTitle'>"+resource.attributes['name'].value+"</div>";             
@@ -532,16 +504,12 @@ function GenerateSearchResult(returnedData) {
                         output+="<div>"+resource.attributes['cost'].value+" sek</div>";
                     output+="</div>" 
                 output+="</div>"
-            }
-                    
+            }     
         }
     }
-
-
     output+="</div>";
 	var div=document.getElementById('placeProdHere');
 	div.innerHTML=output;    
-
 }
 /*------------------------------------------------------------------------------*/
 
