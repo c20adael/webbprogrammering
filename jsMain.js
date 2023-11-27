@@ -16,11 +16,6 @@ function isGreen() {
 
 }
 
-function bytinnehall() {
-    var divobj = document.getElementById("output1");
-    divobj.innerHTML = "Bra jobbat!";
-}
-
 function validate(id) {
     var textinput = document.getElementById(id);
     var val = textinput.value;
