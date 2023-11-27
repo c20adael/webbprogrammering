@@ -332,12 +332,12 @@ function GenerateMinSida(returnedData) {
 
             // Retrieve and display attrubutes from database
             var customer = resultset.childNodes.item(i);
-                output+="<tr><td>"+customer.attributes['id'].nodeValue+"</td></tr>";
-                output+="<tr><td>"+customer.attributes['firstname'].nodeValue+"</td></tr>";
-                output+="<tr><td>"+customer.attributes['lastname'].nodeValue+"</td></tr>";
-                output+="<tr><td>"+customer.attributes['address'].nodeValue+"</td></tr>";
-                output+="<tr><td>"+customer.attributes['email'].nodeValue+"</td></tr>";
-                output+="<tr><td>"+customer.attributes['auxdata'].nodeValue+"</td></tr>";   
+                output+="<tr><td>Användarnamn: "+customer.attributes['id'].nodeValue+"</td></tr>";
+                output+="<tr><td>Förnamn: "+customer.attributes['firstname'].nodeValue+"</td></tr>";
+                output+="<tr><td>Efternamn: "+customer.attributes['lastname'].nodeValue+"</td></tr>";
+                output+="<tr><td>Adress: "+customer.attributes['address'].nodeValue+"</td></tr>";
+                output+="<tr><td>Mejl: "+customer.attributes['email'].nodeValue+"</td></tr>";
+                output+="<tr><td>Auxdata: "+customer.attributes['auxdata'].nodeValue+"</td></tr>";   
         }
     }
     output+="</table>"
@@ -351,29 +351,58 @@ function GenerateMinSida(returnedData) {
 function generateBookingHistory(returnedData){
     console.log(returnedData)
     var resultset = returnedData.childNodes[0];
-    var output="<table class='histTable'>";
-    output+="<thead><tr><th>Start</th>  <th>Slut</th>  <th>pos</th>  <th>Cost</th>  <th>category</th>  <th>size</th>  <th>Aux</th></tr></thead>";
-    output+="<tbody>";
-    for (i = 0; i < resultset.childNodes.length; i++) {
-        // Iterate over all child nodes of that node that are booking nodes
-        if (resultset.childNodes.item(i).nodeName == "booking") {
-            output+="<tr>";
+    if(resultset.childNodes.length==1){
+        var output="inga bokningar gjorda";
+        var div=document.getElementById('bokningsHistorik');
+        div.innerHTML=output;
+    }else{
+        console.log(resultset.childNodes.length);
+        var output="<table class='histTable'>";
+        output+="<thead><tr><th>Produkt</th> <th>Från</th>  <th>Till</th>  <th>Skärm</th> <th>Grafikkort</th> <th>Processor</th> <th>Cost</th> <th>size</th> <th>Ta bort</th></tr></thead>";
+        output+="<tbody>";
+        for (i = 0; i < resultset.childNodes.length; i++) {
+            // Iterate over all child nodes of that node that are booking nodes
+            if (resultset.childNodes.item(i).nodeName == "booking") {
+                output+="<tr>";
 
-            // Retrieve and display data from database
-            var customer = resultset.childNodes.item(i);
-                output+="<td>"+customer.attributes['date'].nodeValue+"</td>";
-                output+="<td>"+customer.attributes['dateto'].nodeValue+"</td>";
-                output+="<td>"+customer.attributes['position'].nodeValue+"</td>";
-                output+="<td>"+customer.attributes['cost'].nodeValue+"</td>";
-                output+="<td>"+customer.attributes['category'].nodeValue+"</td>";
-                output+="<td>"+customer.attributes['size'].nodeValue+"</td>"; 
-                output+="<td>"+customer.attributes['auxdata'].nodeValue+"</td>";   
+                // Retrieve and display data from database
+                var customer = resultset.childNodes.item(i);
+                    output+="<td>"+customer.attributes['name'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['date'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['dateto'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['company'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['location'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['category'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['cost'].nodeValue+"</td>";
+                    output+="<td>"+customer.attributes['size'].nodeValue+"</td>"; 
+                    output+="<td><button id='Avboka' onclick='removeBooking(`"+customer.attributes['resourceID'].nodeValue+"`, `"+customer.attributes['customerID'].nodeValue+"`, `"+customer.attributes['date'].nodeValue+"`)'>Avboka</button></td>";   
+            }
+            output+="</tr>"
         }
-        output+="</tr>"
+        output+="</tbody></table>"
+        var div=document.getElementById('bokningsHistorik');
+        div.innerHTML=output;
     }
-    output+="</tbody></table>"
-	var div=document.getElementById('bokningsHistorik');
-	div.innerHTML=output;
+}
+/*--------------------------------------------------------------------*/
+
+
+/*---------------------------------Removes a booking from a user-----------------------------------*/
+function removeBooking(bookedProdID, userID, date){
+    console.log(bookedProdID, userID, date)
+    $.ajax({
+        type: 'POST',
+        url: 'Webbprogrammering-API-2014-/booking/deletebooking_XML.php',
+        data: {
+            resourceID: escape(bookedProdID),
+            date: escape(date),
+            customerID: escape(userID)
+        },
+        success: GetUserOnClickMinSida,
+        error: errormsg
+
+    });
+
 
 }
 /*--------------------------------------------------------------------*/
